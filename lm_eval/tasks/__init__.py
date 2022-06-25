@@ -50,6 +50,7 @@ from . import blimp
 from . import asdiv
 from . import gsm8k
 from . import storycloze
+from . import assin
 
 ########################################
 # Translation tasks
@@ -283,6 +284,9 @@ TASK_REGISTRY = {
     # "storycloze_2016": storycloze.StoryCloze2016,
     # "storycloze_2018": storycloze.StoryCloze2018,
     # "sat": sat.SATAnalogies,
+    # PORTUGUESE
+    "assin_rte": assin.ASSIN_RTE,
+    "assin_sts": assin.ASSIN_STS,
 }
 
 
