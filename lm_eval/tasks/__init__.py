@@ -51,6 +51,7 @@ from . import asdiv
 from . import gsm8k
 from . import storycloze
 from . import assin
+from . import faquad
 
 ########################################
 # Translation tasks
@@ -287,6 +288,7 @@ TASK_REGISTRY = {
     # PORTUGUESE
     "assin_rte": assin.ASSIN_RTE,
     "assin_sts": assin.ASSIN_STS,
+    "faquad": faquad.FAQuAD,
 }
 
 
