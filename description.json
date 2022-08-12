@@ -1,5 +1,7 @@
 {
     "assin_sts": "D\u00ea uma pontua\u00e7\u00e3o entre 1.0 e 5.0, sendo 1.0 pouco similar e 5.0 muito similar.",
     "assin_rte": "Responda \u0022Sim\u0022 ou \u0022N\u00e3o\u0022.",
-    "faquad": "Responda a pergunta com base no contexto."
+    "faquad": "Responda a pergunta com base no contexto.",
+    "harem": "Adicione as entidades: <pessoa>, <organização>, <local>, <tempo> e <valor>.",
+    "tweetsentbr": "Classifique cada mensagem como \u0022positiva\u0022, \u0022neutra\u0022 ou \u0022negativa\u0022."
 }
