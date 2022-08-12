@@ -53,6 +53,7 @@ from . import storycloze
 from . import assin
 from . import faquad
 from . import harem
+from . import tweetsentbr
 
 ########################################
 # Translation tasks
@@ -291,6 +292,7 @@ TASK_REGISTRY = {
     "assin_sts": assin.ASSIN_STS,
     "faquad": faquad.FAQuAD,
     "harem": harem.HAREM,
+    "tweetsentbr": tweetsentbr.TweetSentBR,
 }
 
 
