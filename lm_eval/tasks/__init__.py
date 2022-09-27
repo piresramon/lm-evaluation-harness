@@ -54,6 +54,7 @@ from . import assin
 from . import faquad
 from . import harem
 from . import tweetsentbr
+from . import enem
 
 ########################################
 # Translation tasks
@@ -293,6 +294,7 @@ TASK_REGISTRY = {
     "faquad": faquad.FAQuAD,
     "harem": harem.HAREM,
     "tweetsentbr": tweetsentbr.TweetSentBR,
+    "enem": enem.ENEM,
 }
 
 
