@@ -74,25 +74,25 @@ class ENEM_CoT_1(MultipleChoiceTask):
     # Note: the stats 'EK_only' and 'TC_only' are valid only for use_just_linguistic_and_humanities=True
     enem_stats = {
         '2009-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2009-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        # '2010-1':    {'EK_only': 13, 'TC_only': 16, 'total': 45},
-        # '2010-2':    {'EK_only': 3, 'TC_only': 25, 'total': 40},
-        # '2011-1':    {'EK_only': 11, 'TC_only': 12, 'total': 45},
-        # '2011-2':    {'EK_only': 2, 'TC_only': 21, 'total': 40},
-        # '2012-1':    {'EK_only': 9, 'TC_only': 21, 'total': 45},
-        # '2012-2':    {'EK_only': 3, 'TC_only': 23, 'total': 40},
-        # '2013-1':    {'EK_only': 5, 'TC_only': 19, 'total': 45},
-        # '2013-2':    {'EK_only': 0, 'TC_only': 23, 'total': 40},
-        # '2014-1':    {'EK_only': 7, 'TC_only': 13, 'total': 45},
-        # '2014-2':    {'EK_only': 3, 'TC_only': 22, 'total': 40},
-        # '2015-1':    {'EK_only': 4, 'TC_only': 22, 'total': 45},
-        # '2015-2':    {'EK_only': 1, 'TC_only': 23, 'total': 40},
-        # '2016-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2016-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        # '2016_2_-1': {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2016_2_-2': {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        # '2017-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2017-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        '2009-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        '2010-1':    {'EK_only': 13, 'TC_only': 16, 'total': 45},
+        '2010-2':    {'EK_only': 3, 'TC_only': 25, 'total': 40},
+        '2011-1':    {'EK_only': 11, 'TC_only': 12, 'total': 45},
+        '2011-2':    {'EK_only': 2, 'TC_only': 21, 'total': 40},
+        '2012-1':    {'EK_only': 9, 'TC_only': 21, 'total': 45},
+        '2012-2':    {'EK_only': 3, 'TC_only': 23, 'total': 40},
+        '2013-1':    {'EK_only': 5, 'TC_only': 19, 'total': 45},
+        '2013-2':    {'EK_only': 0, 'TC_only': 23, 'total': 40},
+        '2014-1':    {'EK_only': 7, 'TC_only': 13, 'total': 45},
+        '2014-2':    {'EK_only': 3, 'TC_only': 22, 'total': 40},
+        '2015-1':    {'EK_only': 4, 'TC_only': 22, 'total': 45},
+        '2015-2':    {'EK_only': 1, 'TC_only': 23, 'total': 40},
+        '2016-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
+        '2016-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        '2016_2_-1': {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
+        '2016_2_-2': {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        '2017-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
+        '2017-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
     }
 
     def download(self, data_dir=None, cache_dir=None, download_mode=None):
