@@ -63,7 +63,7 @@ def load_explanations():
     return explanations
 
 
-class ENEM_CoT_1(MultipleChoiceTask):
+class ENEM_CoT(MultipleChoiceTask):
     VERSION = 0
     DATASET_PATH = 'data/enem'
     DATASET_NAME = None
@@ -74,26 +74,28 @@ class ENEM_CoT_1(MultipleChoiceTask):
     # Note: the stats 'EK_only' and 'TC_only' are valid only for use_just_linguistic_and_humanities=True
     enem_stats = {
         '2009-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        '2009-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        '2010-1':    {'EK_only': 13, 'TC_only': 16, 'total': 45},
-        '2010-2':    {'EK_only': 3, 'TC_only': 25, 'total': 40},
-        '2011-1':    {'EK_only': 11, 'TC_only': 12, 'total': 45},
-        '2011-2':    {'EK_only': 2, 'TC_only': 21, 'total': 40},
-        '2012-1':    {'EK_only': 9, 'TC_only': 21, 'total': 45},
-        '2012-2':    {'EK_only': 3, 'TC_only': 23, 'total': 40},
-        '2013-1':    {'EK_only': 5, 'TC_only': 19, 'total': 45},
-        '2013-2':    {'EK_only': 0, 'TC_only': 23, 'total': 40},
-        '2014-1':    {'EK_only': 7, 'TC_only': 13, 'total': 45},
-        '2014-2':    {'EK_only': 3, 'TC_only': 22, 'total': 40},
-        '2015-1':    {'EK_only': 4, 'TC_only': 22, 'total': 45},
-        '2015-2':    {'EK_only': 1, 'TC_only': 23, 'total': 40},
-        '2016-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        '2016-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        '2016_2_-1': {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        '2016_2_-2': {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        '2017-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        '2017-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        # '2009-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        # '2010-1':    {'EK_only': 13, 'TC_only': 16, 'total': 45},
+        # '2010-2':    {'EK_only': 3, 'TC_only': 25, 'total': 40},
+        # '2011-1':    {'EK_only': 11, 'TC_only': 12, 'total': 45},
+        # '2011-2':    {'EK_only': 2, 'TC_only': 21, 'total': 40},
+        # '2012-1':    {'EK_only': 9, 'TC_only': 21, 'total': 45},
+        # '2012-2':    {'EK_only': 3, 'TC_only': 23, 'total': 40},
+        # '2013-1':    {'EK_only': 5, 'TC_only': 19, 'total': 45},
+        # '2013-2':    {'EK_only': 0, 'TC_only': 23, 'total': 40},
+        # '2014-1':    {'EK_only': 7, 'TC_only': 13, 'total': 45},
+        # '2014-2':    {'EK_only': 3, 'TC_only': 22, 'total': 40},
+        # '2015-1':    {'EK_only': 4, 'TC_only': 22, 'total': 45},
+        # '2015-2':    {'EK_only': 1, 'TC_only': 23, 'total': 40},
+        # '2016-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
+        # '2016-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        # '2016_2_-1': {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
+        # '2016_2_-2': {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
+        # '2017-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
+        # '2017-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
     }
+
+    explanations = {}
 
     def download(self, data_dir=None, cache_dir=None, download_mode=None):
 
@@ -215,13 +217,13 @@ class ENEM_CoT_1(MultipleChoiceTask):
                     correct = option.get('id')
 
             document = {
-                'id': exam + '_' + child.get('id'),  # used to filter out largest prompt candidates
-                'exam': exam,  # used to get metrics for each exam, and to filter out prompt candidates
+                'id': exam + '_' + child.get('id'),  # used to access the explanations
+                'exam': exam,  # used to get metrics for each exam
                 'context': header,
                 'question': statement,
                 'options': options,
                 'label': correct.lower(),
-                'explanation': ''
+                'explanation': self.explanations.get(exam + '_' + child.get('id'), 'EMPTY')
             }
             assert len(document['options']) == 5, print('The document does not have 5 options')
             documents.append(document)
@@ -259,54 +261,21 @@ class ENEM_CoT_1(MultipleChoiceTask):
             prompt += "Enunciado: " + doc["question"] + "\nAlternativas:\n"
             for choice, option in zip(choices, doc["options"]):
                 prompt += f"{choice.upper()}. {option}\n"
-            #prompt += "Resposta:"
-            prompt += "Explicação:"
+            prompt += "Resposta:"
             return prompt
         choices = ['a', 'b', 'c', 'd', 'e']
         return {
             "query": format_example(doc, choices),
-            #"choices": doc["options"],
-            #"gold": choices.index(doc["label"]),
+            "choices": doc["options"],
+            "gold": choices.index(doc["label"]),
             "gold": doc["explanation"],
             "id": doc["id"],
-            #"exam": doc["exam"],
-            #"contents": doc["context"] + doc["question"],  # used for indexing
+            "exam": doc["exam"],
+            "contents": doc["context"] + doc["question"],  # used for indexing
         }
 
     def doc_to_text(self, doc):
         return doc["query"]
-
-    def doc_to_target(self, doc):
-        return " " + doc['gold']
-
-    def construct_requests(self, doc, ctx):
-        """ Uses RequestFactory to construct Requests and returns an iterable of 
-        Requests which will be sent to the LM.
-
-        :param doc:
-            The document as returned from training_docs, validation_docs, or test_docs.
-        :param ctx: str
-            The context string, generated by fewshot_context. This includes the natural 
-            language description, as well as the few shot examples, and the question
-            part of the document for `doc`. 
-        """
-        continuation = rf.greedy_until(ctx, ['\n'])
-        return continuation
-
-    def process_results(self, doc, results):
-        return {
-            "completion": (doc['id'], results)
-        }
-    
-    def higher_is_better(self):
-        return {
-            "completion": False,
-        }
-    
-    def aggregation(self):
-        return {
-            "completion": save_explanations,
-        }
         
     @utils.positional_deprecated
     def fewshot_context(self, doc, num_fewshot, prompt_mode=None, provide_description=None, rnd=None, description=None):
@@ -370,188 +339,71 @@ class ENEM_CoT_1(MultipleChoiceTask):
         return description + labeled_examples + example
 
 
-class ENEM_CoT_2(MultipleChoiceTask):
-    VERSION = 0
-    DATASET_PATH = 'data/enem'
-    DATASET_NAME = None
+class ENEM_CoT_1(ENEM_CoT):
 
-    use_just_linguistic_and_humanities = False
-    tag = None
+    def _process_doc(self, doc):
+        def format_example(doc, choices):
+            """
+                Passagem: <passage>
+                Pergunta: <question>
+                Choices:
+                A. <choice1>
+                B. <choice2>
+                C. <choice3>
+                D. <choice4>
+                Answer:
+            """
+            prompt = "Cabeçalho: " + doc["context"] + "\n"
+            prompt += "Enunciado: " + doc["question"] + "\nAlternativas:\n"
+            for choice, option in zip(choices, doc["options"]):
+                prompt += f"{choice.upper()}. {option}\n"
+            prompt += "Explicação:"
+            return prompt
+        choices = ['a', 'b', 'c', 'd', 'e']
+        return {
+            "query": format_example(doc, choices),
+            "gold": doc["explanation"],
+            "id": doc["id"],
+        }
 
-    # Note: the stats 'EK_only' and 'TC_only' are valid only for use_just_linguistic_and_humanities=True
-    enem_stats = {
-        '2009-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2009-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        # '2010-1':    {'EK_only': 13, 'TC_only': 16, 'total': 45},
-        # '2010-2':    {'EK_only': 3, 'TC_only': 25, 'total': 40},
-        # '2011-1':    {'EK_only': 11, 'TC_only': 12, 'total': 45},
-        # '2011-2':    {'EK_only': 2, 'TC_only': 21, 'total': 40},
-        # '2012-1':    {'EK_only': 9, 'TC_only': 21, 'total': 45},
-        # '2012-2':    {'EK_only': 3, 'TC_only': 23, 'total': 40},
-        # '2013-1':    {'EK_only': 5, 'TC_only': 19, 'total': 45},
-        # '2013-2':    {'EK_only': 0, 'TC_only': 23, 'total': 40},
-        # '2014-1':    {'EK_only': 7, 'TC_only': 13, 'total': 45},
-        # '2014-2':    {'EK_only': 3, 'TC_only': 22, 'total': 40},
-        # '2015-1':    {'EK_only': 4, 'TC_only': 22, 'total': 45},
-        # '2015-2':    {'EK_only': 1, 'TC_only': 23, 'total': 40},
-        # '2016-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2016-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        # '2016_2_-1': {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2016_2_-2': {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-        # '2017-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
-        # '2017-2':    {'EK_only': 0, 'TC_only': 0, 'total': 40}, #
-    }
+    def doc_to_text(self, doc):
+        return doc["query"]
 
+    def doc_to_target(self, doc):
+        return " " + doc['gold']
+
+    def construct_requests(self, doc, ctx):
+        """ Uses RequestFactory to construct Requests and returns an iterable of 
+        Requests which will be sent to the LM.
+
+        :param doc:
+            The document as returned from training_docs, validation_docs, or test_docs.
+        :param ctx: str
+            The context string, generated by fewshot_context. This includes the natural 
+            language description, as well as the few shot examples, and the question
+            part of the document for `doc`. 
+        """
+        continuation = rf.greedy_until(ctx, ['\n'])
+        return continuation
+
+    def process_results(self, doc, results):
+        return {
+            "completion": (doc['id'], results)
+        }
+    
+    def higher_is_better(self):
+        return {
+            "completion": False,
+        }
+    
+    def aggregation(self):
+        return {
+            "completion": save_explanations,
+        }
+
+
+class ENEM_CoT_2(ENEM_CoT):
     explanations = load_explanations()
-
-    def download(self, data_dir=None, cache_dir=None, download_mode=None):
-
-        # download and unpack the dataset
-        if not os.path.exists(self.DATASET_PATH):
-            os.makedirs(self.DATASET_PATH, exist_ok=True)
-            URL = "https://www.ime.usp.br/~ddm/project/enem/ENEMdataset.zip"
-            http_response = urlopen(URL)
-            zipfile = ZipFile(BytesIO(http_response.read()))
-            zipfile.extractall(path=self.DATASET_PATH)
-
-        self.dataset = collections.defaultdict(list)
-
-        for exam in self.enem_stats:
-            if not self.use_just_linguistic_and_humanities:
-                n_questions = None
-            else:
-                n_questions = self.enem_stats[exam]['total']
-
-            # get the documents
-            fname = os.path.join(self.DATASET_PATH, exam + '.xml')
-            documents = self._parse_xml(exam.split('-')[0], fname, first_n=n_questions, tag=self.tag)
-
-            self.dataset['test'] += documents
-
-        self.dataset['test'] = list(map(self._process_doc, self.dataset["test"]))
-        self.dataset['train'] = list(map(self._process_doc, [self._get_train_example()]))
-
-    def _get_train_example(self):
-        header = 'Urgência emocional. Se tudo é para ontem, se a vida engata uma primeira e sai em disparada, se não há mais tempo para paradas estratégicas, caímos fatalmente no vício de querer que os amores sejam igualmente resolvidos num átimo de segundo. Temos pressa para ouvir "eu te amo". Não vemos a hora de que fiquem estabelecidas as regras de convívio: somos namorados, ficantes, casados, amantes? Urgência emocional. Uma cilada. Associamos diversas palavras ao AMOR: paixão, romance, sexo, adrenalina, palpitação. Esquecemos, no entanto, da palavra que viabiliza esse sentimento: "paciência". Amor sem paciência não vinga. Amor não pode ser mastigado e engolido com emergência, com fome desesperada. É uma refeição que pode durar uma vida. MEDEIROS, M. Disponível em: http://porumavidasimples.blogspot.com.br. Acesso em: 20 ago. 2017 (adaptado).'
-        statement = 'Nesse texto de opinião, as marcas linguísticas revelam uma situação distensa e de pouca formalidade, o que se evidencia pelo(a) '
-        options = [
-            'impessoalização ao longo do texto, como em: "se não há mais tempo". ',
-            'construção de uma atmosfera de urgência, em palavras como: "pressa". ',
-            'repetição de uma determinada estrutura sintática, como em: "Se tudo é para ontem". ',
-            'ênfase no emprego da hipérbole, como em: "uma refeição que pode durar uma vida". ',
-            'emprego de metáforas, como em: "a vida engata uma primeira e sai em disparada". ',
-        ]
-        explanation = 'A alternativa (A) está ERRADA porque impessoalização não é uma marca de pouca formalidade. Aliás, na sentença apontada na alternativa, o uso do verbo haver seria uma marca de formalidade. A alternativa (B) está ERRADA porque o texto até criou uma atmosfera de urgência, embora tenha sido para criticá-la. Na verdade o texto fala exatamente sobre a importância da paciência e não da pressa. A alternativa (C) está ERRADA porque a estrutura sintática não é repetida sistematicamente ao longo do texto. A alternativa (D) está ERRADA porque, embora possua hipérboles, para afirmar que o texto enfatiza essa figura de linguagem, ela deveria aparecer mais vezes. A alternativa (E) está CORRETA porque o texto possui comparações implícitas que se caracterizam como metáforas. Logo o texto emprega metáforas. '
-        #explanation = 'O texto é escrito em uma linguagem leve ágil, e de pouca formalidade, possui figuras de linguagem, como metáforas e hipérboles, que não são excludentes. Em uma primeira análise, daria para afirmar que as alternativas D. e E. estão corretas. Entretanto, em uma análise mais detalhada, o uso da expressão "emprego de metáforas" se mostra mais adequada do que "ênfase no emprego da hipérbole", visto que, para afirmarmos que o uso de hipérboles foram enfatizadas, a figura de linguagem deveria ter aparecido mais vezes. Isso torna mais provável que a alternativa E. seja a correta. Além disso, impessoalização não deve ser apontada como marca de pouca formalidade. Existe também uma atmosfera de urgência, mas criticada no texto que fala exatamente sobre a importância da paciência e não da pressa. Por fim, a estrutura sintática não é repetida sistematicamente ao longo do texto. '
-        document = {
-            'id': 'exam_1',  # used to filter out largest prompt candidates
-            'exam': '2022',  # used to get metrics for each exam, and to filter out prompt candidates
-            'context': header,
-            'question': statement,
-            'options': options,
-            'label': 'e',
-            'explanation': explanation, 
-        }
-        return document
-
-    def _parse_xml(self, exam, path, tag=None, first_n=None, verbose=True):
-        tree = ET.parse(path)
-        root = tree.getroot()
-
-        filters = {
-            'IC': 'No',
-            'MR': 'No',
-            'CE': 'No',
-        }
-
-        if tag is not None:
-            assert tag in ['TC', 'EK', 'DS', 'TC_only', 'EK_only', 'DS_only'], (
-                "Please choose 'TC', 'EK', 'DS', 'TC_only', 'EK_only' or 'DS_only'")
-
-            if tag == 'TC':
-                filters['TC'] = 'Yes'
-            if tag == 'EK':
-                filters['EK'] = 'Yes'
-            if tag == 'DS':
-                filters['DS'] = 'Yes'
-            elif tag == 'TC_only':
-                filters['TC'] = 'Yes'
-                filters['EK'] = 'No'
-                filters['DS'] = 'No'
-            elif tag == 'EK_only':
-                filters['TC'] = 'No'
-                filters['EK'] = 'Yes'
-                filters['DS'] = 'No'
-            elif tag == 'DS_only':
-                filters['TC'] = 'No'
-                filters['EK'] = 'No'
-                filters['DS'] = 'Yes'
-
-        def ignore_question(child, filters):
-            for k,v in filters.items():
-                if child.get(k) != v:
-                    return True
-            return False
-
-        documents = []
-
-        for idx, child in enumerate(root):
-
-            if first_n is not None and idx == first_n:
-                break
-
-            if ignore_question(child, filters):
-                continue
-
-            header = child.find('header').text
-            statement = child.find('statement').text
-
-            for pattern, replace in PATTERNS_REPLACES:
-                header = apply_regex(pattern, replace, header)
-                statement = apply_regex(pattern, replace, statement)
-                
-            options = []
-
-            answers = child.find('answers')
-            for option in answers.iter('option'):
-                text = option.text
-                for pattern, replace in PATTERNS_REPLACES:
-                    if text is not None:
-                        text = apply_regex(pattern, replace, text)
-                options.append(text)
-
-                if option.get('correct') == 'Yes':
-                    correct = option.get('id')
-
-            document = {
-                'id': exam + '_' + child.get('id'),  # used to filter out largest prompt candidates
-                'exam': exam,  # used to get metrics for each exam, and to filter out prompt candidates
-                'context': header,
-                'question': statement,
-                'options': options,
-                'label': correct.lower(),
-                'explanation': self.explanations.get(exam + '_' + child.get('id'), 'EMPTY')
-                #'explanation': self.explanations.get(exam + '_' + child.get('id'))
-            }
-            assert len(document['options']) == 5, print('The document does not have 5 options')
-            documents.append(document)
-
-        return documents
-
-    def has_training_docs(self):
-        return True
-
-    def has_validation_docs(self):
-        return False
-
-    def has_test_docs(self):
-        return True
-
-    def training_docs(self):
-        return self.dataset["train"]
-
-    def test_docs(self):
-        return self.dataset["test"]
 
     def _process_doc(self, doc):
         def format_example(doc, choices):
@@ -577,20 +429,16 @@ class ENEM_CoT_2(MultipleChoiceTask):
             "query": format_example(doc, choices),
             "choices": doc["options"],
             "gold": choices.index(doc["label"]),
-            # "id": doc["id"],
             "exam": doc["exam"],
-            #"contents": doc["context"] + doc["question"],  # used for indexing
         }
 
     # TEMPORARY
     def construct_requests(self, doc, ctx):
         assert 'EMPTY' not in ctx
-
         lls = [
             rf.loglikelihood(ctx, " {}".format(choice))[0]
             for choice in doc['choices']
         ]
-
         return lls
 
     def doc_to_text(self, doc):
@@ -640,65 +488,3 @@ class ENEM_CoT_2(MultipleChoiceTask):
             '2016_2_': mean,
             '2017': mean,
         }
-
-    @utils.positional_deprecated
-    def fewshot_context(self, doc, num_fewshot, prompt_mode=None, provide_description=None, rnd=None, description=None):
-        """ Returns a fewshot context string that is made up of a prepended description
-        (if provided), the `num_fewshot` number of examples, and an appended prompt example.
-
-        :param doc: str
-            The document as returned from training_docs, validation_docs, or test_docs.
-        :param num_fewshot: int
-            The number of fewshot examples to provide in the returned context string.
-        :param prompt_mode: str
-            The type of prompt. Please set prompt_mode as "fixed", "dynamic-random", or "dynamic-similar".
-            WARNING: this is implemented only for Portuguese tasks.
-        :param provide_description: bool
-            Not implemented, and this option is deprecated and will be removed in a future version in favor of a different description providing method
-        :param rnd: random.Random
-            The pseudo-random number generator used to randomly sample examples.
-            WARNING: This is currently a required arg although it's optionalized with a default `None`.
-        :param description: str
-            The task's description that will be prepended to the fewshot examples.
-        :returns: str
-            The fewshot context.
-        """
-        assert rnd is not None, "A `random.Random` generator argument must be provided to `rnd`"
-        assert not provide_description, (
-            "The `provide_description` arg will be removed in future versions. To prepend "
-            "a custom description to the context, supply the corresponding string via the "
-            "`description` arg."
-        )
-        if provide_description is not None:
-            # nudge people to not specify it at all
-            print("WARNING: provide_description is deprecated and will be removed in a future version in favor of description_dict")
-
-        description = description + "\n\n" if description else ""
-
-        if num_fewshot == 0:
-            labeled_examples = ""
-        else:
-            # for sets with no training docs, draw from other set *but ensure no overlap with current doc*
-            if self.has_training_docs():
-                fewshotex = self.fewshot_examples(k=num_fewshot, rnd=rnd)
-            else:
-                if self._fewshot_docs is None:
-                    self._fewshot_docs = list(
-                        self.validation_docs() if self.has_validation_docs() else self.test_docs()
-                    )
-
-                fewshotex = rnd.sample(self._fewshot_docs, num_fewshot + 1)
-
-                # get rid of the doc that's the one we're evaluating, if it's in the fewshot
-                fewshotex = [x for x in fewshotex if x != doc][:num_fewshot]
-
-            labeled_examples = ''
-            for i, doc_ex in enumerate(fewshotex):
-                labeled_examples += f'Questão {i+1}:\n'
-                labeled_examples += self.doc_to_text(doc_ex) + self.doc_to_target(doc_ex)
-                labeled_examples += '\n###\n'
-            labeled_examples += f'Questão {len(fewshotex) + 1}:\n'
-
-        example = self.doc_to_text(doc)
-        return description + labeled_examples + example
-
