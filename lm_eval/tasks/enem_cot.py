@@ -368,16 +368,16 @@ class ENEM_CoT_1(ENEM_CoT):
                 Passagem: <passage>
                 Pergunta: <question>
                 Choices:
-                A. <choice1>
-                B. <choice2>
-                C. <choice3>
-                D. <choice4>
+                A) <choice1>
+                B) <choice2>
+                C) <choice3>
+                D) <choice4>
                 Answer:
             """
             prompt = "Cabeçalho: " + doc["context"] + "\n"
             prompt += "Enunciado: " + doc["question"] + "\nAlternativas:\n"
             for choice, option in zip(choices, doc["options"]):
-                prompt += f"{choice.upper()}. {option}\n"
+                prompt += f"{choice.upper()}) {option}\n"
             prompt += "Explicação:"
             return prompt
         choices = ['a', 'b', 'c', 'd', 'e']
