@@ -69,6 +69,7 @@ class ENEM_CoT(MultipleChoiceTask):
     DATASET_NAME = None
 
     use_just_linguistic_and_humanities = False
+    use_sequencial_explanation = False
     tag = None
 
     # Note: the stats 'EK_only' and 'TC_only' are valid only for use_just_linguistic_and_humanities=True
@@ -134,8 +135,8 @@ class ENEM_CoT(MultipleChoiceTask):
             'ênfase no emprego da hipérbole, como em: "uma refeição que pode durar uma vida". ',
             'emprego de metáforas, como em: "a vida engata uma primeira e sai em disparada". ',
         ]
-        explanation = 'A alternativa A) está ERRADA porque impessoalização não é uma marca de pouca formalidade. Aliás, na sentença apontada na alternativa, o uso do verbo haver seria uma marca de formalidade. A alternativa B) está ERRADA porque o texto até criou uma atmosfera de urgência, embora tenha sido para criticá-la. Na verdade o texto fala exatamente sobre a importância da paciência e não da pressa. A alternativa C) está ERRADA porque a estrutura sintática não é repetida sistematicamente ao longo do texto. A alternativa D) está ERRADA porque, embora o texto possua hipérboles, para afirmar que a figura de linguagem é enfatizada, ela deveria aparecer mais vezes. A alternativa E) está CORRETA porque o texto possui comparações implícitas que se caracterizam como metáforas. Logo o texto emprega metáforas. '
-        explanation = 'O texto é escrito em uma linguagem leve, ágil, e de pouca formalidade. Além disso, possui figuras de linguagem, como metáforas e hipérboles, que não são excludentes. Em uma análise sequencial das alternativas, daria para afirmar que D) e E) estão corretas. Entretanto, observando em detalhes, nota-se que a expressão "emprego de metáforas" mostra ser mais adequada do que "ênfase no emprego da hipérbole", visto que, para afirmarmos que o uso de hipérboles foi enfatizado, a figura de linguagem deveria ter aparecido mais vezes. Isso torna a alternativa E) mais provável de ser correta. Além disso, impessoalização não deve ser apontada como marca de pouca formalidade. Existe também uma atmosfera de urgência, mas que é criticada no texto que destaca a importância da paciência e não da pressa. Por fim, a estrutura sintática não é repetida sistematicamente ao longo do texto. '
+        explanation_1 = 'A alternativa A) está ERRADA porque impessoalização não é uma marca de pouca formalidade. Aliás, na sentença apontada na alternativa, o uso do verbo haver seria uma marca de formalidade. A alternativa B) está ERRADA porque o texto até criou uma atmosfera de urgência, embora tenha sido para criticá-la. Na verdade o texto fala exatamente sobre a importância da paciência e não da pressa. A alternativa C) está ERRADA porque a estrutura sintática não é repetida sistematicamente ao longo do texto. A alternativa D) está ERRADA porque, embora o texto possua hipérboles, para afirmar que a figura de linguagem é enfatizada, ela deveria aparecer mais vezes. A alternativa E) está CORRETA porque o texto possui comparações implícitas que se caracterizam como metáforas. Logo o texto emprega metáforas. '
+        explanation_2 = 'O texto é escrito em uma linguagem leve, ágil, e de pouca formalidade. Além disso, possui figuras de linguagem, como metáforas e hipérboles, que não são excludentes. Em uma análise sequencial das alternativas, daria para afirmar que D) e E) estão corretas. Entretanto, observando em detalhes, nota-se que a expressão "emprego de metáforas" mostra ser mais adequada do que "ênfase no emprego da hipérbole", visto que, para afirmarmos que o uso de hipérboles foi enfatizado, a figura de linguagem deveria ter aparecido mais vezes. Isso torna a alternativa E) mais provável de ser correta. Além disso, impessoalização não deve ser apontada como marca de pouca formalidade. Existe também uma atmosfera de urgência, mas que é criticada no texto que destaca a importância da paciência e não da pressa. Por fim, a estrutura sintática não é repetida sistematicamente ao longo do texto. '
         document_1 = {
             'id': 'exam_1',  # used to filter out largest prompt candidates
             'exam': '2022',  # used to get metrics for each exam, and to filter out prompt candidates
@@ -143,7 +144,7 @@ class ENEM_CoT(MultipleChoiceTask):
             'question': statement,
             'options': options,
             'label': 'e',
-            'explanation': explanation, 
+            'explanation': explanation_1 if self.use_sequencial_explanation else explanation_2, 
         }
 
         header = 'Sempre que a relevância do discurso entra em jogo, a questão torna-se política por definição, pois é o discurso que faz do homem um ser político. E tudo que os homens fazem, sabem ou experimentam só tem sentido na medida em que pode ser discutido. Haverá, talvez, verdades que ficam além da linguagem e que podem ser de grande relevância para o homem no singular, isto é, para o homem que, seja o que for, não é um ser político. Mas homens no plural, isto é, os homens que vivem e se movem e agem neste mundo, só podem experimentar o significado das coisas por poderem falar e ser inteligíveis entre si e consigo mesmos. ARENDT, H. A condição humana. Rio de Janeiro: Forense Universitária, 2004.'
@@ -155,8 +156,8 @@ class ENEM_CoT(MultipleChoiceTask):
             'melhoria da técnica.',
             'construção da sociabilidade.',
         ]
-        explanation = 'A alternativa A) está ERRADA porque Hannah Arendt não trata do entendimento da cultura, mas da relação social entre as pessoas dessa cultura. A alternativa B) está ERRADA porque Hannah Arendt não fala sobre criatividade, mas sobre a construção de laços entre as pessoas. A alternativa C) está ERRADA porque a linguagem é utilizada no oposto da individualidade, em algo mais coletivo e social. A alternativa D) está ERRADA porque o texto não fala de técnica, mas de laços. A alternativa E) está CORRETA porque a nossa sociabilidade se constrói a partir da linguagem, o que faz de nós seres políticos, no sentido de viver em sociedade, em ambientes coletivos. '
-        explanation = 'Hannah Arendt defende em sua obra que somos seres políticos, no sentido próprio de vivermos em pólis, em ambiente coletivo e social. E essa sociabilidade só é possível por meio do discurso, da linguagem. Desse modo, podemos concluir que a linguagem se apresenta como uma importante ferramenta para a construção da sociabilidade, e portanto a alternativa E) é a correta. Além disso, não se trata do entendimento da cultura, mas da relação social entre as pessoas dessa cultura. Hannah também não fala sobre aumento de criatividade, tampouco sobre técnica. Por fim, a linguagem é utilizada em algo mais coletivo e social, justamente o oposto da individualidade. '
+        explanation_1 = 'A alternativa A) está ERRADA porque Hannah Arendt não trata do entendimento da cultura, mas da relação social entre as pessoas dessa cultura. A alternativa B) está ERRADA porque Hannah Arendt não fala sobre criatividade, mas sobre a construção de laços entre as pessoas. A alternativa C) está ERRADA porque a linguagem é utilizada no oposto da individualidade, em algo mais coletivo e social. A alternativa D) está ERRADA porque o texto não fala de técnica, mas de laços. A alternativa E) está CORRETA porque a nossa sociabilidade se constrói a partir da linguagem, o que faz de nós seres políticos, no sentido de viver em sociedade, em ambientes coletivos. '
+        explanation_2 = 'Hannah Arendt defende em sua obra que somos seres políticos, no sentido próprio de vivermos em pólis, em ambiente coletivo e social. E essa sociabilidade só é possível por meio do discurso, da linguagem. Desse modo, podemos concluir que a linguagem se apresenta como uma importante ferramenta para a construção da sociabilidade, e portanto a alternativa E) é a correta. Além disso, não se trata do entendimento da cultura, mas da relação social entre as pessoas dessa cultura. Hannah também não fala sobre aumento de criatividade, tampouco sobre técnica. Por fim, a linguagem é utilizada em algo mais coletivo e social, justamente o oposto da individualidade. '
         document_2 = {
             'id': 'exam_2',  # used to filter out largest prompt candidates
             'exam': '2022',  # used to get metrics for each exam, and to filter out prompt candidates
@@ -164,7 +165,7 @@ class ENEM_CoT(MultipleChoiceTask):
             'question': statement,
             'options': options,
             'label': 'e',
-            'explanation': explanation, 
+            'explanation': explanation_1 if self.use_sequencial_explanation else explanation_2, 
         }
         return [document_1, document_2]
 
