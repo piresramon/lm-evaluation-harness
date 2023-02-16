@@ -289,7 +289,6 @@ class ENEM_CoT(MultipleChoiceTask):
         return {
             "query": format_example(doc, choices),
             "choices": doc["options"],
-            "gold": choices.index(doc["label"]),
             "gold": doc["explanation"],
             "id": doc["id"],
             "exam": doc["exam"],
@@ -354,7 +353,7 @@ class ENEM_CoT(MultipleChoiceTask):
             for i, doc_ex in enumerate(fewshotex):
                 labeled_examples += f'Questão {i+1}:\n'
                 labeled_examples += self.doc_to_text(doc_ex) + self.doc_to_target(doc_ex)
-                labeled_examples += '\n###\n'
+                labeled_examples += '\n##\n'
             labeled_examples += f'Questão {len(fewshotex) + 1}:\n'
 
         example = self.doc_to_text(doc)
