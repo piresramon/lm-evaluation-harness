@@ -72,6 +72,13 @@ class ENEM_CoT(MultipleChoiceTask):
     use_sequencial_explanation = False
     tag = None
 
+    # overwrite the description. Set description=None to keep from description.json.
+    description = "Escreva uma explicação em formato de cadeia de raciocínio que permita responder à questão de múltipla escolha abaixo. Apenas uma alternativa é correta."
+    if use_sequencial_explanation:
+        description += "\nFormato desejado: para cada alternativa, escreva uma sentença que começa classificando como CORRETA ou ERRADA e termina com uma justificativa."
+    else:
+        description += "\nFormato desejado: aponte as alternativas que fazem sentido, escolha a alternativa CORRETA e justifique, e termine justificando porque as demais alternativas estão incorretas."
+
     # Note: the stats 'EK_only' and 'TC_only' are valid only for use_just_linguistic_and_humanities=True
     enem_stats = {
         '2009-1':    {'EK_only': 0, 'TC_only': 0, 'total': 45}, #
@@ -135,7 +142,7 @@ class ENEM_CoT(MultipleChoiceTask):
             'ênfase no emprego da hipérbole, como em: "uma refeição que pode durar uma vida". ',
             'emprego de metáforas, como em: "a vida engata uma primeira e sai em disparada". ',
         ]
-        explanation_1 = 'A alternativa A) está ERRADA porque impessoalização não é uma marca de pouca formalidade. Aliás, na sentença apontada na alternativa, o uso do verbo haver seria uma marca de formalidade. A alternativa B) está ERRADA porque o texto até criou uma atmosfera de urgência, embora tenha sido para criticá-la. Na verdade o texto fala exatamente sobre a importância da paciência e não da pressa. A alternativa C) está ERRADA porque a estrutura sintática não é repetida sistematicamente ao longo do texto. A alternativa D) está ERRADA porque, embora o texto possua hipérboles, para afirmar que a figura de linguagem é enfatizada, ela deveria aparecer mais vezes. A alternativa E) está CORRETA porque o texto possui comparações implícitas que se caracterizam como metáforas. Logo o texto emprega metáforas. '
+        explanation_1 = 'A alternativa A) está ERRADA porque impessoalização não é uma marca de pouca formalidade, inclusive o uso do verbo haver representa uma marca de formalidade. A alternativa B) está ERRADA porque o texto até criou uma atmosfera de urgência, embora tenha sido para criticá-la, e discute exatamente a importância da paciência e não da pressa. A alternativa C) está ERRADA porque a estrutura sintática não é repetida sistematicamente ao longo do texto. A alternativa D) está ERRADA porque, embora o texto possua hipérboles, para afirmar que a figura de linguagem é enfatizada, ela deveria aparecer mais vezes. A alternativa E) está CORRETA porque o texto possui comparações implícitas que se caracterizam como metáforas. Logo o texto emprega metáforas. '
         explanation_2 = 'O texto é escrito em uma linguagem leve, ágil, e de pouca formalidade. Além disso, possui figuras de linguagem, como metáforas e hipérboles, que não são excludentes. Em uma análise sequencial das alternativas, daria para afirmar que D) e E) estão corretas. Entretanto, observando em detalhes, nota-se que a expressão "emprego de metáforas" mostra ser mais adequada do que "ênfase no emprego da hipérbole", visto que, para afirmarmos que o uso de hipérboles foi enfatizado, a figura de linguagem deveria ter aparecido mais vezes. Isso torna a alternativa E) mais provável de ser correta. Além disso, impessoalização não deve ser apontada como marca de pouca formalidade. Existe também uma atmosfera de urgência, mas que é criticada no texto que destaca a importância da paciência e não da pressa. Por fim, a estrutura sintática não é repetida sistematicamente ao longo do texto. '
         document_1 = {
             'id': 'exam_1',  # used to filter out largest prompt candidates
@@ -330,6 +337,10 @@ class ENEM_CoT(MultipleChoiceTask):
             # nudge people to not specify it at all
             print("WARNING: provide_description is deprecated and will be removed in a future version in favor of description_dict")
 
+        # overwrite the description
+        if self.description:
+            description = self.description
+
         description = description + "\n\n" if description else ""
 
         if num_fewshot == 0:
@@ -424,7 +435,11 @@ class ENEM_CoT_1(ENEM_CoT):
 
 
 class ENEM_CoT_2(ENEM_CoT):
+    # load the explanations
     explanations = load_explanations()
+
+    # for this task, the description is kept
+    description = None
 
     def _process_doc(self, doc):
         def format_example(doc, choices):
