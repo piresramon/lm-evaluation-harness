@@ -304,6 +304,12 @@ class ENEM_CoT(MultipleChoiceTask):
 
     def doc_to_text(self, doc):
         return doc["query"]
+
+    def fewshot_examples(self, k, rnd):
+        if self._training_docs is None:
+            self._training_docs = list(self.training_docs())
+
+        return self._training_docs[:k]
         
     @utils.positional_deprecated
     def fewshot_context(self, doc, num_fewshot, prompt_mode=None, provide_description=None, rnd=None, description=None):
