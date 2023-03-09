@@ -402,6 +402,8 @@ class ENEM_CoT_1(ENEM_CoT):
             "query": format_example(doc, choices),
             "gold": doc["explanation"],
             "id": doc["id"],
+            "label": doc["label"],  # to get metrics acessing pred via regex
+            "exam": doc["exam"],  # to get metrics
         }
 
     def doc_to_text(self, doc):
@@ -425,18 +427,60 @@ class ENEM_CoT_1(ENEM_CoT):
         return continuation
 
     def process_results(self, doc, results):
+        """This code tries to use regex to get the response directly from the
+        explanation. The implementation is not complete and the regex must be
+        improved.
+        """
+        gold = doc["label"].upper()
+
+        #regex = r"([ABCDE])\)(?:.{0,100}\s+)?CORRETA\b|CORRETA(?:.{0,100}\s+)?([ABCDE])\)"
+        regex = r"([ABCDE])\)(?:.*\s+)?CORRETA\b|CORRETA(?:.*\s+)?([ABCDE])\)"
+        match = re.search(regex, results[0])
+        if match:
+            pred = match.group(1) or match.group(2)
+        else:
+            pred = 'Z'
+            print(results[0])
+            print('ops, the model did not classify one alternative as "CORRETA"')
+
+        acc = 1. if pred == gold else 0.
+
         return {
-            "completion": (doc['id'], results)
+            "completion": (doc['id'], results),
+            "acc": acc,
+            doc['exam']: acc,
         }
     
     def higher_is_better(self):
         return {
             "completion": False,
+            "acc": True,
+            '2009': True,
+            '2010': True,
+            '2011': True,
+            '2012': True,
+            '2013': True,
+            '2014': True,
+            '2015': True,
+            '2016': True,
+            '2016_2_': True,
+            '2017': True,
         }
     
     def aggregation(self):
         return {
             "completion": save_explanations,
+            "acc": mean,
+            '2009': mean,
+            '2010': mean,
+            '2011': mean,
+            '2012': mean,
+            '2013': mean,
+            '2014': mean,
+            '2015': mean,
+            '2016': mean,
+            '2016_2_': mean,
+            '2017': mean,
         }
 
 
@@ -496,7 +540,7 @@ class ENEM_CoT_2(ENEM_CoT):
         return {
             "acc": acc,
             "acc_norm": acc_norm,
-            doc['exam']: acc_norm,
+            doc['exam']: acc,
         }
     
     def higher_is_better(self):
