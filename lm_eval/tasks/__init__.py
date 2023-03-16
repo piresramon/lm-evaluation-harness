@@ -56,6 +56,7 @@ from . import harem
 from . import tweetsentbr
 from . import enem
 from . import enem_cot
+from . import enem_completion
 
 ########################################
 # Translation tasks
@@ -298,6 +299,8 @@ TASK_REGISTRY = {
     "enem": enem.ENEM,
     "enem_1": enem_cot.ENEM_CoT_1,
     "enem_2": enem_cot.ENEM_CoT_2,
+    "enem_completion": enem_completion.ENEM,
+    "enem_completion_cot": enem_completion.ENEM_CoT,
 }
 
 
