@@ -463,3 +463,45 @@ class ENEM_CoT(ENEM):
     def doc_to_target(self, doc):
         return " " + ['A.', 'B.', 'C.', 'D.', 'E.'][doc['gold']].upper()
  
+class ENEM_2022(ENEM):
+    """We recomend using this task for zero-shot, because _get_train_examples 
+    returns examples from 2022 exam. To run with few-shot, it is neccessary to
+    remove from test set the documents returned in _get_train_examples.
+    """
+
+    def download(self, data_dir=None, cache_dir=None, download_mode=None):
+
+        self.dataset = collections.defaultdict(list)
+        
+        fname = os.path.join(self.DATASET_PATH, '2022.json')
+        with open(fname) as f:
+            documents = json.load(f)
+        
+        def ignore_question(doc):
+            filters = {
+                'IU': False,
+                'MR': False,
+                'ML': False,
+            }
+            for k,v in filters.items():
+                if doc[k] != v:
+                    return True
+            return False
+
+        documents = list(filter(lambda doc: not ignore_question(doc), documents))
+        self.dataset['test'] = list(map(self._process_doc, documents))
+
+    def test_docs(self):
+        return self.dataset['test']
+
+    def higher_is_better(self):
+        return {
+            "acc": True,
+            '2022': True,
+        }
+    
+    def aggregation(self):
+        return {
+            "acc": mean,
+            '2022': mean,
+        }
