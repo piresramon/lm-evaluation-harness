@@ -92,11 +92,11 @@ class GPT3LM(BaseLM):
     @property
     def max_length(self):
         # Note: the OpenAI API supports up to 2049 tokens, with the first token being the first input token
-        return 2048
+        return 4000
 
     @property
     def max_gen_toks(self):
-        return 256
+        return 512
 
     @property
     def batch_size(self):
