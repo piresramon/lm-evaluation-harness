@@ -545,3 +545,7 @@ class ENEM_2022(ENEM):
             "acc": mean,
             '2022': mean,
         }
+        
+
+class ENEM_CoT_2022(ENEM_CoT, ENEM_2022):
+    pass
