@@ -302,6 +302,7 @@ TASK_REGISTRY = {
     "enem_completion": enem_completion.ENEM,
     "enem_completion_cot": enem_completion.ENEM_CoT,
     "enem_2022": enem_completion.ENEM_2022,
+    "enem_cot_2022": enem_completion.ENEM_CoT_2022,
 }
 
 
