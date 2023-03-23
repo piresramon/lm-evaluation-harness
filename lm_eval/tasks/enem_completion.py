@@ -209,7 +209,7 @@ class ENEM(Task):
         explanation_1 = 'A alternativa A. está ERRADA porque impessoalização não é uma marca de pouca formalidade, inclusive o uso do verbo haver representa uma marca de formalidade. A alternativa B. está ERRADA porque o texto até criou uma atmosfera de urgência, embora tenha sido para criticá-la, e discute exatamente a importância da paciência e não da pressa. A alternativa C. está ERRADA porque a estrutura sintática não é repetida sistematicamente ao longo do texto. A alternativa D. está ERRADA porque, embora o texto possua hipérboles, para afirmar que a figura de linguagem é enfatizada, ela deveria aparecer mais vezes. A alternativa E. está CORRETA porque o texto possui comparações implícitas que se caracterizam como metáforas. Logo o texto emprega metáforas. Resposta:'
         explanation_2 = 'O texto é escrito em uma linguagem leve, ágil, e de pouca formalidade. Além disso, possui figuras de linguagem, como metáforas e hipérboles, que não são excludentes. Em uma análise sequencial das alternativas, daria para afirmar que D. e E. estão corretas. Entretanto, observando em detalhes, nota-se que a expressão "emprego de metáforas" mostra ser mais adequada do que "ênfase no emprego da hipérbole", visto que, para afirmarmos que o uso de hipérboles foi enfatizado, a figura de linguagem deveria ter aparecido mais vezes. Isso torna a alternativa E. mais provável de ser CORRETA. Além disso, impessoalização não deve ser apontada como marca de pouca formalidade. Existe também uma atmosfera de urgência, mas que é criticada no texto que destaca a importância da paciência e não da pressa. Por fim, a estrutura sintática não é repetida sistematicamente ao longo do texto. Resposta:'
         document_1 = {
-            'id': 'exam_1',  # used to filter out largest prompt candidates
+            'id': 'ENEM_2022_21',  # used to filter out from test set
             'exam': '2022',  # used to get metrics for each exam, and to filter out prompt candidates
             'context': header,
             'question': statement,
@@ -230,7 +230,7 @@ class ENEM(Task):
         explanation_1 = 'A alternativa A. está ERRADA porque Hannah Arendt não trata do entendimento da cultura, mas da relação social entre as pessoas dessa cultura. A alternativa B. está ERRADA porque Hannah Arendt não fala sobre criatividade, mas sobre a construção de laços entre as pessoas. A alternativa C. está ERRADA porque a linguagem é utilizada no oposto da individualidade, em algo mais coletivo e social. A alternativa D. está ERRADA porque o texto não fala de técnica, mas de laços. A alternativa E. está CORRETA porque a nossa sociabilidade se constrói a partir da linguagem, o que faz de nós seres políticos, no sentido de viver em sociedade, em ambientes coletivos. Resposta:'
         explanation_2 = 'Hannah Arendt defende em sua obra que somos seres políticos, no sentido próprio de vivermos em pólis, em ambiente coletivo e social. E essa sociabilidade só é possível por meio do discurso, da linguagem. Desse modo, podemos concluir que a linguagem se apresenta como uma importante ferramenta para a construção da sociabilidade, e portanto a alternativa E. é a CORRETA. Além disso, não se trata do entendimento da cultura, mas da relação social entre as pessoas dessa cultura. Hannah também não fala sobre aumento de criatividade, tampouco sobre técnica. Por fim, a linguagem é utilizada em algo mais coletivo e social, justamente o oposto da individualidade. Resposta:'
         document_2 = {
-            'id': 'exam_2',  # used to filter out largest prompt candidates
+            'id': 'ENEM_2022_88',  # used to filter out from test set
             'exam': '2022',  # used to get metrics for each exam, and to filter out prompt candidates
             'context': header,
             'question': statement,
@@ -238,8 +238,28 @@ class ENEM(Task):
             'label': 'e',
             'explanation': explanation_1 if self.use_sequencial_explanation else explanation_2, 
         }
-        return [document_1, document_2]
 
+        header = 'Um casal planeja construir em sua chácara uma piscina com o formato de um paralelepípedo reto retângulo com capacidade para 90 000 L de água. O casal contratou uma empresa de construções que apresentou cinco projetos com diferentes combinações nas dimensões internas de profundidade, largura e comprimento. A piscina a ser construída terá revestimento interno em suas paredes e fundo com uma mesma cerâmica, e o casal irá escolher o projeto que exija a menor área de revestimento. As dimensões internas de profundidade, largura e comprimento, respectivamente, para cada um dos projetos, são: projeto I: 1,8 m, 2,0 m e 25,0 m; projeto II: 2,0 m, 5,0 m e 9,0 m; projeto III: 1,0 m, 6,0 m e 15,0 m; projeto IV: 1,5 m, 15,0 m e 4,0 m; projeto V: 2,5 m, 3,0 m e 12,0 m.'
+        statement = 'O projeto que o casal deverá escolher será o'
+        options = [
+            'I.',
+            'II.',
+            'III.',
+            'IV.',
+            'V.',
+        ]
+        explanation_1 = 'Devemos calcular a área das quatro faces laterais e a área da base inferior (fundo da piscina) e somar essas áreas para obter a área de revestimento. Logo, calculando a área de revestimento de cada projeto, temos: Projeto I: A = 2 x 25 + 2 x 1,8 x (2 + 25) = 147,2; Projeto II: A = 9 x 5 + 2 x 2 x (9 + 5) = 101; Projeto III: A = 15 x 6 + 2 x 1 x (15 + 6) = 132; Projeto IV: A = 4 x 15 + 2 x 1,5 x (15 + 4) = 117; Projeto V: A = 3 x 12 + 2 x 2,5 x (3 + 12) = 111. Logo, o projeto com menor área de revestimento, é o projeto II, portanto a resposta corrreta é B. Resposta:'
+        explanation_2 = 'Devemos calcular a área das quatro faces laterais e a área da base inferior (fundo da piscina) e somar essas áreas para obter a área de revestimento. Logo, calculando a área de revestimento de cada projeto, temos: Projeto I: A = 2 x 25 + 2 x 1,8 x (2 + 25) = 147,2; Projeto II: A = 9 x 5 + 2 x 2 x (9 + 5) = 101; Projeto III: A = 15 x 6 + 2 x 1 x (15 + 6) = 132; Projeto IV: A = 4 x 15 + 2 x 1,5 x (15 + 4) = 117; Projeto V: A = 3 x 12 + 2 x 2,5 x (3 + 12) = 111. Logo, o projeto com menor área de revestimento, é o projeto II, portanto a resposta corrreta é B. Resposta:'
+        document_3 = {
+            'id': 'ENEM_2022_143',  # used to filter out from test set
+            'exam': '2022',  # used to get metrics for each exam, and to filter out prompt candidates
+            'context': header,
+            'question': statement,
+            'options': options,
+            'label': 'b',
+            'explanation': explanation_1 if self.use_sequencial_explanation else explanation_2, 
+        }
+        return [document_1, document_2, document_3]
 
     def has_training_docs(self):
         return True
@@ -401,6 +421,8 @@ class ENEM(Task):
                 # fewshotex = self.fewshot_examples(k=num_fewshot, rnd=rnd)
                 ## keeping the training docs in original order (use this to fixed prompts)
                 fewshotex = list(self.training_docs())[:num_fewshot]
+                ## if the current doc is among the training docs, we do not use it as few-shot
+                fewshotex = [ex for ex in fewshotex if doc['id'] != ex['id']]
             else:
                 if self._fewshot_docs is None:
                     self._fewshot_docs = list(
