@@ -531,6 +531,16 @@ class ENEM_2022(ENEM):
         documents = list(filter(lambda doc: not ignore_question(doc), documents))
         self.dataset['test'] = list(map(self._process_doc, documents))
 
+    def process_results(self, doc, results):
+        results = super().process_results(doc, results)
+
+        q_id = int(doc['id'].split('_')[-1])
+        area = ['languages', 'human-sciences', 'natural-sciences', 'mathematics'][int(np.ceil(q_id/45))-1]
+
+        results[area] = results['acc']
+        # results['c_' + area] = 1  # just to count number of questions per area
+        return results
+
     def test_docs(self):
         return self.dataset['test']
 
@@ -538,12 +548,28 @@ class ENEM_2022(ENEM):
         return {
             "acc": True,
             '2022': True,
+            'languages': True,
+            'human-sciences': True,
+            'natural-sciences': True,
+            'mathematics': True,
+            'c_languages': True,
+            'c_human-sciences': True,
+            'c_natural-sciences': True,
+            'c_mathematics': True,
         }
     
     def aggregation(self):
         return {
             "acc": mean,
             '2022': mean,
+            'languages': mean,
+            'human-sciences': mean,
+            'natural-sciences': mean,
+            'mathematics': mean,
+            'c_languages': sum,
+            'c_human-sciences': sum,
+            'c_natural-sciences': sum,
+            'c_mathematics': sum,
         }
         
 
