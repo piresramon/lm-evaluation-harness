@@ -498,7 +498,7 @@ class ENEM_CoT(ENEM):
             language description, as well as the few shot examples, and the question
             part of the document for `doc`. 
         """
-        continuation = rf.greedy_until(ctx, ['\n\n\n'])  # explanations for MR tends to include \n
+        continuation = rf.greedy_until(ctx, ['\n##\n'])  # explanations for MR tends to include \n in between.
         return continuation
 
  
