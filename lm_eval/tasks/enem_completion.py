@@ -519,8 +519,8 @@ class ENEM_2022(ENEM):
         def ignore_question(doc):
             filters = {
                 'IU': False,
-                'MR': False,
-                'CE': False,
+                # 'MR': False,  # uncomment to filter out MR
+                # 'CE': False,  # uncomment to filter out CE
                 'ML': False,
             }
             for k,v in filters.items():
