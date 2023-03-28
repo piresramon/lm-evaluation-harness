@@ -6,5 +6,7 @@
     "tweetsentbr": "Classifique cada mensagem como \u0022positiva\u0022, \u0022neutra\u0022 ou \u0022negativa\u0022.",
     "enem": "Com base no cabeçalho e no enunciado, selecione a única alternativa correta.",
     "enem_1": "Com base no cabeçalho e no enunciado, classifique cada alternativa como ERRADA ou CORRETA. Apenas uma alternativa é CORRETA.",
-    "enem_2": "Selecione a única alternativa correta."
+    "enem_2": "Selecione a única alternativa correta.",
+    "enem_completion_cot": "Formule uma explicação em cadeia que permita responder à questão de múltipla escolha abaixo. Apenas uma alternativa é correta.\nFormato desejado: aponte as alternativas que fazem sentido, escolha a alternativa CORRETA e justifique, e termine justificando porque as demais alternativas estão incorretas. Encerre a explicação com \"Resposta: \" seguido pela alternativa.",
+    "enem_cot_2022": "Formule uma explicação em cadeia que permita responder à questão de múltipla escolha abaixo. Apenas uma alternativa é correta.\nFormato desejado: aponte as alternativas que fazem sentido, escolha a alternativa CORRETA e justifique, e termine justificando porque as demais alternativas estão incorretas. Encerre a explicação com \"Resposta: \" seguido pela alternativa."
 }
