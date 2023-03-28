@@ -55,8 +55,6 @@ class ENEM(Task):
 
     use_just_linguistic_and_humanities = False
     tag = None
-    description = None
-    use_sequencial_explanation = True
 
     # Note: the stats 'EK_only' and 'TC_only' are valid only for use_just_linguistic_and_humanities=True
     enem_stats = {
@@ -215,7 +213,7 @@ class ENEM(Task):
             'question': statement,
             'options': options,
             'label': 'e',
-            'explanation': explanation_1 if self.use_sequencial_explanation else explanation_2, 
+            'explanation': explanation_2,
         }
 
         header = 'Sempre que a relevância do discurso entra em jogo, a questão torna-se política por definição, pois é o discurso que faz do homem um ser político. E tudo que os homens fazem, sabem ou experimentam só tem sentido na medida em que pode ser discutido. Haverá, talvez, verdades que ficam além da linguagem e que podem ser de grande relevância para o homem no singular, isto é, para o homem que, seja o que for, não é um ser político. Mas homens no plural, isto é, os homens que vivem e se movem e agem neste mundo, só podem experimentar o significado das coisas por poderem falar e ser inteligíveis entre si e consigo mesmos. ARENDT, H. A condição humana. Rio de Janeiro: Forense Universitária, 2004.'
@@ -236,7 +234,7 @@ class ENEM(Task):
             'question': statement,
             'options': options,
             'label': 'e',
-            'explanation': explanation_1 if self.use_sequencial_explanation else explanation_2, 
+            'explanation': explanation_2,
         }
 
         header = 'Um casal planeja construir em sua chácara uma piscina com o formato de um paralelepípedo reto retângulo com capacidade para 90 000 L de água. O casal contratou uma empresa de construções que apresentou cinco projetos com diferentes combinações nas dimensões internas de profundidade, largura e comprimento. A piscina a ser construída terá revestimento interno em suas paredes e fundo com uma mesma cerâmica, e o casal irá escolher o projeto que exija a menor área de revestimento. As dimensões internas de profundidade, largura e comprimento, respectivamente, para cada um dos projetos, são: projeto I: 1,8 m, 2,0 m e 25,0 m; projeto II: 2,0 m, 5,0 m e 9,0 m; projeto III: 1,0 m, 6,0 m e 15,0 m; projeto IV: 1,5 m, 15,0 m e 4,0 m; projeto V: 2,5 m, 3,0 m e 12,0 m.'
@@ -257,7 +255,7 @@ class ENEM(Task):
             'question': statement,
             'options': options,
             'label': 'b',
-            'explanation': explanation_1 if self.use_sequencial_explanation else explanation_2, 
+            'explanation': explanation_2,
         }
         return [document_1, document_2, document_3]
 
@@ -407,10 +405,6 @@ class ENEM(Task):
             # nudge people to not specify it at all
             print("WARNING: provide_description is deprecated and will be removed in a future version in favor of description_dict")
 
-        # overwrite the description (used for ENEM_CoT)
-        if self.description:
-           description = self.description
-
         description = description + "\n\n" if description else ""
 
         if num_fewshot == 0:
@@ -446,15 +440,6 @@ class ENEM(Task):
 
 
 class ENEM_CoT(ENEM):
-    use_sequencial_explanation = False
-
-    # overwrite the description. Set description=None to keep from description.json.
-    description = "Formule uma explicação em cadeia que permita responder à questão de múltipla escolha abaixo. Apenas uma alternativa é correta."
-    if use_sequencial_explanation:
-        description += "\nFormato desejado: para cada alternativa, escreva uma sentença que começa classificando como CORRETA ou ERRADA e termina com uma justificativa."
-    else:
-        description += "\nFormato desejado: aponte as alternativas que fazem sentido, escolha a alternativa CORRETA e justifique, e termine justificando porque as demais alternativas estão incorretas."    
-    description += " Encerre a explicação com \"Resposta: \" seguido pela alternativa."
 
     def _process_doc(self, doc):
         def format_example(doc, choices):
